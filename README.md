@@ -8,11 +8,14 @@
 
 ## Install
 
+**Option 1: From GitHub release tarball**
+
 ```bash
-openclaw plugins install thranborn/openclaw-plugin-talevyn
+curl -sL https://github.com/thranborn/openclaw-plugin-talevyn/archive/refs/heads/develop.tar.gz -o talevyn-plugin.tar.gz
+openclaw plugins install talevyn-plugin.tar.gz
 ```
 
-Or link a local clone:
+**Option 2: Clone and link locally**
 
 ```bash
 git clone https://github.com/thranborn/openclaw-plugin-talevyn.git
@@ -20,6 +23,8 @@ cd openclaw-plugin-talevyn
 npm install
 openclaw plugins install -l .
 ```
+
+> OpenClaw doesn't support GitHub shorthand (e.g., `user/repo`) for plugin installs -- you need to download the tarball or clone locally.
 
 ## Configuration
 
