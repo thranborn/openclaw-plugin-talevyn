@@ -80,6 +80,47 @@ function formatTimestamp(ts: number | bigint): string {
   return d.toISOString();
 }
 
+/** Fetch and parse tale metadata JSON from its URI. Returns null on failure. */
+async function fetchMetadata(uri: string, timeoutMs = 5000): Promise<any | null> {
+  if (!uri) return null;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(uri, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/** Extract a concise summary from raw tale metadata JSON. */
+function summarizeMetadata(meta: any): any {
+  if (!meta) return null;
+  const summary: any = {};
+  if (meta.name) summary.name = meta.name;
+  if (meta.description) summary.description = meta.description;
+  if (meta.image) summary.image = meta.image;
+  if (meta.external_url) summary.externalUrl = meta.external_url;
+  if (Array.isArray(meta.attributes)) {
+    summary.attributes = {};
+    for (const attr of meta.attributes) {
+      if (attr.trait_type && attr.value !== undefined) {
+        summary.attributes[attr.trait_type] = attr.value;
+      }
+    }
+  }
+  if (meta.talevyn?.frames && Array.isArray(meta.talevyn.frames)) {
+    summary.frameCount = meta.talevyn.frames.length;
+    summary.frames = meta.talevyn.frames.map((f: any) => ({
+      image: f.url,
+      caption: f.caption,
+    }));
+  }
+  return summary;
+}
+
 // ─── Plugin entry ───────────────────────────────────────────────────────────
 
 export default function register(api: any) {
@@ -94,7 +135,8 @@ export default function register(api: any) {
     name: "talevyn_get_tale",
     description:
       "Get complete details for a Talevyn tale (narrative NFT episode) by its ID. " +
-      "Returns metadata URI, publisher, mint price, supply info, and whether minting is active.",
+      "Returns on-chain data (publisher, price, supply) plus the full story metadata " +
+      "(title, description, image, frames with captions).",
     parameters: {
       type: "object",
       properties: {
@@ -113,6 +155,10 @@ export default function register(api: any) {
 
         const uri = await contract.uri(params.taleId);
 
+        // Auto-fetch metadata so the agent gets the full story content
+        const metadata = await fetchMetadata(metadataURI);
+        const story = summarizeMetadata(metadata);
+
         return text(JSON.stringify({
           taleId: params.taleId,
           metadataURI,
@@ -127,6 +173,7 @@ export default function register(api: any) {
           royaltyBps: Number(royalty),
           royaltyPercent: (Number(royalty) / 100).toFixed(2) + "%",
           tokenURI: uri,
+          story,
         }, null, 2));
       } catch (e: any) {
         return text(`Error fetching tale ${params.taleId}: ${e.message}`);
@@ -139,7 +186,8 @@ export default function register(api: any) {
     name: "talevyn_browse_tales",
     description:
       "Browse available Talevyn tales. Can list the most recent tales, " +
-      "or filter by publisher address. Returns a summary of each tale.",
+      "or filter by publisher address. Returns a summary of each tale " +
+      "including its title and description from metadata.",
     parameters: {
       type: "object",
       properties: {
@@ -191,9 +239,20 @@ export default function register(api: any) {
           try {
             const [metadataURI, publisher, mintPrice, maxSup, _maxPerWallet, totalMinted, _timestamp, active] =
               await contract.getTale(id);
+
+            // Fetch metadata for title/description (brief summary for browse listing)
+            const metadata = await fetchMetadata(metadataURI);
+            const name = metadata?.name || null;
+            const description = metadata?.description || null;
+            const image = metadata?.image || null;
+            const externalUrl = metadata?.external_url || null;
+
             tales.push({
               taleId: Number(id),
-              metadataURI,
+              name,
+              description,
+              image,
+              externalUrl,
               publisher,
               mintPrice: formatEth(mintPrice) + " ETH",
               maxSupply: maxSup.toString() === "0" ? "unlimited" : maxSup.toString(),
