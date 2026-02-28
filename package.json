@@ -1,5 +1,5 @@
 {
-  "name": "@thranborn/openclaw-plugin-talevyn",
+  "name": "talevyn",
   "version": "1.0.0",
   "description": "OpenClaw plugin for interacting with the Talevyn NFT contract on Base — browse tales, mint episodes, check balances, and monitor events.",
   "type": "module",
