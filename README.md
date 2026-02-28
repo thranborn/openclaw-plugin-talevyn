@@ -8,14 +8,32 @@
 
 ## Install
 
-**Option 1: From GitHub release tarball**
+**Option 1: From GitHub Packages (recommended)**
+
+The plugin is published to [GitHub Packages](https://github.com/thranborn/openclaw-plugin-talevyn/pkgs/npm/openclaw-plugin-talevyn). Configure npm to use GitHub's registry for the `@thranborn` scope, then install:
+
+```bash
+# One-time setup: point @thranborn scope to GitHub Packages
+echo "@thranborn:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+# Install (or upgrade)
+openclaw plugins install @thranborn/openclaw-plugin-talevyn
+```
+
+> **Note:** GitHub Packages requires authentication even for public packages. Add an auth token to `~/.npmrc`:
+> ```
+> //npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT
+> ```
+> The PAT needs at minimum the `read:packages` scope. See [GitHub docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages) for details.
+
+**Option 2: From GitHub release tarball**
 
 ```bash
 curl -sL https://github.com/thranborn/openclaw-plugin-talevyn/archive/refs/heads/develop.tar.gz -o talevyn-plugin.tar.gz
 openclaw plugins install talevyn-plugin.tar.gz
 ```
 
-**Option 2: Clone and link locally**
+**Option 3: Clone and link locally (for development)**
 
 ```bash
 git clone https://github.com/thranborn/openclaw-plugin-talevyn.git
@@ -23,8 +41,6 @@ cd openclaw-plugin-talevyn
 npm install
 openclaw plugins install -l .
 ```
-
-> OpenClaw doesn't support GitHub shorthand (e.g., `user/repo`) for plugin installs -- you need to download the tarball or clone locally.
 
 ## Configuration
 
