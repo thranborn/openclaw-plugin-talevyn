@@ -1,0 +1,45 @@
+{
+  "name": "@thranborn/openclaw-plugin-talevyn",
+  "version": "1.0.0",
+  "description": "OpenClaw plugin for interacting with the Talevyn NFT contract on Base — browse tales, mint episodes, check balances, and monitor events.",
+  "type": "module",
+  "main": "index.ts",
+  "openclaw": {
+    "extensions": ["./index.ts"]
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "talevyn",
+    "nft",
+    "erc-1155",
+    "base",
+    "blockchain",
+    "web3",
+    "narrative",
+    "minting"
+  ],
+  "author": "Thranborn <https://github.com/Thranborn>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thranborn/openclaw-plugin-talevyn"
+  },
+  "bugs": {
+    "url": "https://github.com/Thranborn/openclaw-plugin-talevyn/issues"
+  },
+  "homepage": "https://github.com/Thranborn/openclaw-plugin-talevyn#readme",
+  "files": [
+    "index.ts",
+    "abi.ts",
+    "openclaw.plugin.json",
+    "skills/",
+    "tsconfig.json"
+  ],
+  "dependencies": {
+    "ethers": "^6.13.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,4 @@
+node_modules/
+test-contract.mjs
+.git/
+.gitignore

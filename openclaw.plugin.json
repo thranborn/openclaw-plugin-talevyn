@@ -1,0 +1,39 @@
+{
+  "id": "talevyn",
+  "name": "Talevyn",
+  "description": "Interact with the Talevyn NFT contract on Base — browse tales, mint episodes, check balances, and monitor events.",
+  "version": "1.0.0",
+  "skills": ["skills/talevyn"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "rpcUrl": {
+        "type": "string",
+        "description": "Base network RPC URL (default: https://base-rpc.publicnode.com)"
+      },
+      "contractAddress": {
+        "type": "string",
+        "description": "Talevyn contract address (default: 0x4aFC8EBaD95f7361C26493AD0Ef24b8deE20036d)"
+      },
+      "privateKey": {
+        "type": "string",
+        "description": "Private key for signing mint transactions (required for minting)"
+      }
+    }
+  },
+  "uiHints": {
+    "rpcUrl": {
+      "label": "Base RPC URL",
+      "placeholder": "https://mainnet.base.org"
+    },
+    "contractAddress": {
+      "label": "Contract Address",
+      "placeholder": "0x4aFC8EBaD95f7361C26493AD0Ef24b8deE20036d"
+    },
+    "privateKey": {
+      "label": "Wallet Private Key",
+      "sensitive": true
+    }
+  }
+}
